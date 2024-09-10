@@ -1,6 +1,6 @@
 Abelha
 Avestruz
-Bicho-preguiça
+Bicho preguiça
 Boi
 Burro
 Cachorro
@@ -47,9 +47,9 @@ Antílope
 Búfalo
 Cheetah
 Doninha
-Elefante-marinho
+Elefante marinho
 Falcão
-Galo-da-serra
+Galo da serra
 Hipopótamo
 Jararaca
 Lobo

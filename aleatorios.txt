@@ -29,7 +29,7 @@ Carro
 Disco
 Elefante
 Fruta
-Guarda-chuva
+Guarda chuva
 Horta
 Ilha
 Jardim
