@@ -1,3 +1,4 @@
+from tkinter import *
 from unidecode import unidecode
 from os import system, name
 from time import sleep
@@ -128,5 +129,30 @@ def Jogar():
     except:
         print('\033[31mErro ao rodar o jogo.\033[0m')
 
+jogoForca = Tk()
 
-Jogar()
+LARGURA_JANELA = 820
+ALTURA_JANELA = 520
+
+jogoForca.title('Jogo da Forca.')
+
+jogoForca.geometry(f'{LARGURA_JANELA}x{ALTURA_JANELA}')
+jogoForca.config(bg='#000000')
+jogoForca.resizable(False, False)
+
+icone = PhotoImage(file='forca.png')
+jogoForca.iconphoto(True, icone)
+
+criador = Label(jogoForca, text='Criado por Matheus Polletti', font=('Helvetica', 12), bg='black', foreground='white')
+criador.pack(anchor=CENTER)
+
+canvas = Canvas(jogoForca, width=LARGURA_JANELA, height=ALTURA_JANELA, bg='white')
+canvas.pack()
+
+# x1, y1, x2, y1    
+canvas.create_line(20, ALTURA_JANELA - 80, 180, ALTURA_JANELA - 80, width=10)
+canvas.create_line(95, ALTURA_JANELA - 80, 95, 80, width=10)
+canvas.create_line(90, 80, 360, 80, width=10)
+canvas.create_line(355, 85, 355, 160, width=6, fill='brown')
+
+jogoForca.mainloop()
