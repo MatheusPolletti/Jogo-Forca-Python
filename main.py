@@ -221,39 +221,49 @@ def telaInicial():
 
 
 def jogo(_fruta):
-    chances = 5
     def chave_digitada(evento):
-        
         nonlocal chances
         nonlocal palavra_jogador
         nonlocal palavra_adivinhar
-        print('t', palavra_jogador.replace(' ', ''))
-        print('a', unidecode(palavra_adivinhar.lower()))
-        if (evento.char.isalpha()) and (evento.char not in palavras_digitas):
-            palavras_digitas.append(evento.char)
-            if (evento.char.lower() in unidecode(palavra_adivinhar.lower())):
+        nonlocal letras_digitadas
+
+        letra = unidecode(evento.char).lower()
+    
+        if (letra.isalpha()) and (letra not in palavras_digitas):
+            palavras_digitas.append(letra)
+            canvas.itemconfig(letras_digitadas, text=f'Digitadas: {", ".join(palavras_digitas)}')
+
+            if (letra in unidecode(palavra_adivinhar.lower())):
                 for posicao, item in enumerate(unidecode(palavra_adivinhar.lower())):
-                    if item == evento.char.lower():
-                        palavra_jogador = palavra_jogador[:posicao] + evento.char.lower() + palavra_jogador[posicao + 1:]
+                    if item == letra:
+                        palavra_jogador = palavra_jogador[:posicao] + letra + palavra_jogador[posicao + 1:]
+
                 canvas.itemconfig(texto_palavra, text=palavra_jogador)
+
                 if (palavra_jogador == unidecode(palavra_adivinhar.lower())):
                     canvas.destroy()
                     jogoForca.config(bg='#FFFFFF')
+
                     vencedor = Label(jogoForca, text='Parabéns! Você venceu.', font=('Helvetica', 40), foreground='green', bg='#FFFFFF')
                     vencedor.pack(anchor=CENTER)
             else:
                 chances -= 1
+    
         elif (evento.char in palavras_digitas):
             linha_deletar = canvas.create_text((600, 250), text='Você já digitou essa letra', font='Helvetica 20', fill='red')
         caixa_texto.delete(0, END)
 
         if (chances <= 0):
             canvas.destroy()
+
             perdeu = Label(jogoForca, text='Você perdeu', font=('Helvetica', 12), bg='black', foreground='red')
-            perdeu.pack(anchor=CENTER) 
+            perdeu.pack(anchor=CENTER)
         
     canvas = Canvas(jogoForca, width=LARGURA_JANELA, height=ALTURA_JANELA, bg='white')
     canvas.pack()
+
+    chances = 5
+    letras_digitadas = canvas.create_text((500, 450), text='', font='Helvetica 24')
 
     # x1, y1, x2, y1    
     canvas.create_line(20, ALTURA_JANELA - 80, 180, ALTURA_JANELA - 80, width=10)
@@ -273,7 +283,6 @@ def jogo(_fruta):
     canvas.create_window(720, 301, height=30, width=36, window=caixa_texto)
     caixa_texto.bind("<KeyPress>", chave_digitada)
 
-    jogoForca.update()
 
 telaInicial()
 
