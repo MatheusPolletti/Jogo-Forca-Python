@@ -4,11 +4,12 @@ from os import system, name
 from time import sleep
 from random import choice
 
+'''
 def limparConsole():
     return system("cls" if name in ("nt", "dos") else "clear")
 
 
-def qualTipo():
+def qualTipo() -> str:
     limparConsole()
 
     print("Modos de jogo: Frutas | Países | Animais | Aleatórios")
@@ -32,10 +33,10 @@ def qualTipo():
                 return 4
 
 
-def palavraAdivinhar():
+def palavraAdivinhar(_tipo: int) -> str:
     while True:
         try:
-            opcao = 1#qualTipo()
+            opcao = _tipo
 
             if opcao == 1:
                 with open('frutas.txt', 'r', encoding='utf-8') as arquivo: 
@@ -57,7 +58,7 @@ def palavraAdivinhar():
             sleep(1)
 
 
-def letraJogar():
+def letraJogar() -> str:
     print('Digite a letra para adivinhar a palavra: ')
 
     while True:
@@ -128,11 +129,38 @@ def Jogar():
                 break
     except:
         print('\033[31mErro ao rodar o jogo.\033[0m')
+'''
+
+def palavraAdivinhar(tipo) -> str:
+    while True:
+        try:
+            opcao = tipo
+
+            if opcao == 1:
+                with open('frutas.txt', 'r', encoding='utf-8') as arquivo: 
+                    linhas = arquivo.readlines()
+            elif opcao == 2:
+                with open('paises.txt', 'r', encoding='utf-8') as arquivo: 
+                    linhas = arquivo.readlines()
+            elif opcao == 3:
+                with open('animais.txt', 'r', encoding='utf-8') as arquivo:
+                    linhas = arquivo.readlines()
+            elif opcao == 4:
+                with open('aleatorios.txt', 'r', encoding='utf-8') as arquivo:
+                    linhas = arquivo.readlines()
+
+            palavra_aleatoria = choice(linhas).strip()
+            return palavra_aleatoria
+        except:
+            print('\033[31mErro ao abrir o arquivo.\033[0m')
+            sleep(1)
 
 jogoForca = Tk()
 
 LARGURA_JANELA = 820
 ALTURA_JANELA = 520
+
+palavras_digitas = []
 
 jogoForca.title('Jogo da Forca.')
 
@@ -146,70 +174,107 @@ jogoForca.iconphoto(True, icone)
 criador = Label(jogoForca, text='Criado por Matheus Polletti', font=('Helvetica', 12), bg='black', foreground='white')
 criador.pack(anchor=CENTER)
 
-canvas = Canvas(jogoForca, width=LARGURA_JANELA, height=ALTURA_JANELA, bg='white')
-canvas.pack()
-
-opcao = 0
-
-def comandoFruta():
-    global opcao
-    opcao= 1
+def telaInicial():
+    def comandoFruta():
+        fruta = palavraAdivinhar(1)
+        canvas.destroy()
+        jogo(fruta)
 
 
-def comandoPaises():
-    global opcao
-    opcao = 2
+    def comandoPaises():
+        paises = palavraAdivinhar(2)
+        canvas.destroy()
+        jogo(paises)
 
 
-def comandoAnimais():
-    global opcao
-    opcao = 3
+    def comandoAnimais():
+        animais = palavraAdivinhar(3)
+        canvas.destroy()
+        jogo(animais)
 
 
-def comandoAleatorios():
-    return 4
+    def comandoAleatorios():
+        aleatorios = palavraAdivinhar(4)
+        canvas.destroy()
+        jogo(aleatorios)
 
 
-canvas.create_text((430, 40), text='Escolha o seu modo de jogo: ', font='Helvetica 24')
+    canvas = Canvas(jogoForca, width=LARGURA_JANELA, height=ALTURA_JANELA, bg='white')
+    canvas.pack()
 
-botao_fruta = Button(canvas, text='Frutas', width=14, height=4, bg='#FFA500', fg='#000000', font=('Helvetica 12'), command=comandoFruta)
-botao_fruta.place(x=40, y=100)
+    canvas.create_text((430, 40), text='Escolha o seu modo de jogo: ', font='Helvetica 24')
 
-botao_paises = Button(canvas, text='Países', width=14, height=4, bg='#FFA500', fg='#000000', font=('Helvetica 12'), command=comandoPaises)
-botao_paises.place(x=240, y=100)
+    botao_fruta = Button(canvas, text='Frutas', width=14, height=4, bg='#FFA500', fg='#000000', font=('Helvetica 12'), command=comandoFruta)
+    botao_fruta.place(x=40, y=100)
 
-botao_animais = Button(canvas, text='Animais', width=14, height=4, bg='#FFA500', fg='#000000', font=('Helvetica 12'), command=comandoAnimais)
-botao_animais.place(x=440, y=100)
+    botao_paises = Button(canvas, text='Países', width=14, height=4, bg='#FFA500', fg='#000000', font=('Helvetica 12'), command=comandoPaises)
+    botao_paises.place(x=240, y=100)
 
-botao_aleatorios = Button(canvas, text='Aleatórios', width=14, height=4, bg='#FFA500', fg='#000000', font=('Helvetica 12'), command=comandoAleatorios)
-botao_aleatorios.place(x=640, y=100)
+    botao_animais = Button(canvas, text='Animais', width=14, height=4, bg='#FFA500', fg='#000000', font=('Helvetica 12'), command=comandoAnimais)
+    botao_animais.place(x=440, y=100)
 
-botao_deletar = Button(canvas, text='Sair', width=4, height=1, bg='red', fg='#000000', font=('Helvetica 8'), command=jogoForca.destroy)
-botao_deletar.place(anchor=NW)
+    botao_aleatorios = Button(canvas, text='Aleatórios', width=14, height=4, bg='#FFA500', fg='#000000', font=('Helvetica 12'), command=comandoAleatorios)
+    botao_aleatorios.place(x=640, y=100)
 
-print(comandoAleatorios)
+    botao_deletar = Button(canvas, text='Sair', width=4, height=1, bg='red', fg='#000000', font=('Helvetica 8'), command=jogoForca.destroy)
+    botao_deletar.place(anchor=NW)
 
 
-'''
-def chave_digitada(evento):
-    if (evento.char.isalpha()):
-        print(evento.char)
+def jogo(_fruta):
+    chances = 5
+    def chave_digitada(evento):
+        
+        nonlocal chances
+        nonlocal palavra_jogador
+        nonlocal palavra_adivinhar
+        print('t', palavra_jogador.replace(' ', ''))
+        print('a', unidecode(palavra_adivinhar.lower()))
+        if (evento.char.isalpha()) and (evento.char not in palavras_digitas):
+            palavras_digitas.append(evento.char)
+            if (evento.char.lower() in unidecode(palavra_adivinhar.lower())):
+                for posicao, item in enumerate(unidecode(palavra_adivinhar.lower())):
+                    if item == evento.char.lower():
+                        palavra_jogador = palavra_jogador[:posicao] + evento.char.lower() + palavra_jogador[posicao + 1:]
+                canvas.itemconfig(texto_palavra, text=palavra_jogador)
+                if (palavra_jogador == unidecode(palavra_adivinhar.lower())):
+                    canvas.destroy()
+                    jogoForca.config(bg='#FFFFFF')
+                    vencedor = Label(jogoForca, text='Parabéns! Você venceu.', font=('Helvetica', 40), foreground='green', bg='#FFFFFF')
+                    vencedor.pack(anchor=CENTER)
+            else:
+                chances -= 1
+        elif (evento.char in palavras_digitas):
+            linha_deletar = canvas.create_text((600, 250), text='Você já digitou essa letra', font='Helvetica 20', fill='red')
+        caixa_texto.delete(0, END)
 
-# x1, y1, x2, y1    
-canvas.create_line(20, ALTURA_JANELA - 80, 180, ALTURA_JANELA - 80, width=10)
-canvas.create_line(95, ALTURA_JANELA - 80, 95, 80, width=10)
-canvas.create_line(90, 80, 360, 80, width=10)
-canvas.create_line(355, 85, 355, 160, width=6, fill='brown')
+        if (chances <= 0):
+            canvas.destroy()
+            perdeu = Label(jogoForca, text='Você perdeu', font=('Helvetica', 12), bg='black', foreground='red')
+            perdeu.pack(anchor=CENTER) 
+        
+    canvas = Canvas(jogoForca, width=LARGURA_JANELA, height=ALTURA_JANELA, bg='white')
+    canvas.pack()
 
-palavra = palavraAdivinhar()
-print(palavra)
+    # x1, y1, x2, y1    
+    canvas.create_line(20, ALTURA_JANELA - 80, 180, ALTURA_JANELA - 80, width=10)
+    canvas.create_line(95, ALTURA_JANELA - 80, 95, 80, width=10)
+    canvas.create_line(90, 80, 360, 80, width=10)
+    canvas.create_line(355, 85, 355, 160, width=6, fill='brown')
 
-# x, y
-canvas.create_text((540, 370), text='_ ' * len(palavra), font='Helvetica 24')
+    print(_fruta)
+    palavra_adivinhar = _fruta
+    palavra_jogador = ('_' * len(palavra_adivinhar))
 
-canvas.create_text((620, 298), text='Digite a letra:', font='Helvetica 20')
-caixa_texto = Entry(canvas, font=('Arial', 24), bg='lightgray')
-canvas.create_window(720, 301, height=20, width=20, window=caixa_texto)
-caixa_texto.bind("<KeyPress>", chave_digitada)
-'''
+    # x, y
+    texto_palavra = canvas.create_text((540, 370), text=palavra_jogador, font='Helvetica 24')
+
+    canvas.create_text((620, 298), text='Digite a letra:', font='Helvetica 20')
+    caixa_texto = Entry(canvas, font=('Arial', 24), bg='lightgray')
+    canvas.create_window(720, 301, height=30, width=36, window=caixa_texto)
+    caixa_texto.bind("<KeyPress>", chave_digitada)
+
+    jogoForca.update()
+
+telaInicial()
+
 jogoForca.mainloop()
